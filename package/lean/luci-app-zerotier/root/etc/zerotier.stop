@@ -10,6 +10,9 @@ do
 	iptables -D FORWARD -o "$i" -j ACCEPT 2>/dev/null
 	iptables -t nat -D POSTROUTING -o "$i" -j MASQUERADE 2>/dev/null
 	ip_segment="$(ip route | grep "dev $i proto" | awk '{print $1}')"
-	iptables -t nat -D POSTROUTING -s "${ip_segment}" -j MASQUERADE 2>/dev/null
+	for ip in ${ip_segment}
+		do
+			iptables -t nat -D POSTROUTING -s "${ip}" -j MASQUERADE
+		done
 	echo "zt interface $i is stopped!"
 done
