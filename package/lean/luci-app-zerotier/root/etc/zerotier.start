@@ -23,6 +23,10 @@ echo "${zt0}" > "/tmp/zt.nif"
 		iptables -I FORWARD -o "$i" -j ACCEPT
 		iptables -t nat -I POSTROUTING -o "$i" -j MASQUERADE
 		ip_segment="$(ip route | grep "dev $i proto" | awk '{print $1}')"
-		iptables -t nat -I POSTROUTING -s "${ip_segment}" -j MASQUERADE
+		for ip in ${ip_segment}
+		do
+			iptables -t nat -I POSTROUTING -s "${ip}" -j MASQUERADE
+		done
+		
 	done
 }
